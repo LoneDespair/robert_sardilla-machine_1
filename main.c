@@ -14,17 +14,19 @@ void sort();
 void clear_duplicates();
 void display();
 void add(node*, node*);
+int get_num();
 
 node *create(), *head;
 
-const char *operation_list = "\nAvailable Operations:\n"
-               "1.Insert front\n"
-               "2.Insert back\n"
-               "3.Reverse\n"
-               "4.Sort\n"
-               "5.Clear duplicates\n"
-               "6.Display\n"
-               "7.Exit\n";
+const char *operation_list =
+        "\nAvailable Operations: (Pls use the number/id)\n"
+            "  1.Insert front\n"
+            "  2.Insert back\n"
+            "  3.Reverse\n"
+            "  4.Sort\n"
+            "  5.Clear duplicates\n"
+            "  6.Display\n"
+            "  7.Exit\n";
 
 
 int main() {
@@ -32,15 +34,13 @@ int main() {
     printf("Submitted by: Robert Sardilla\n");
     printf("Submitted to: Vincent Lomibao\n");
 
+    printf(operation_list);
     head = create();
     int operation = 0;
-    printf(operation_list);
 
     while (operation != 7) {
-
         printf("\nEnter your operation: ");
-
-        scanf("%d", &operation);
+        operation = get_num();
 
         switch (operation) {
         case 1:
@@ -72,8 +72,8 @@ int main() {
             break;
 
         default:
-            printf(operation_list);
             printf("\nInvalid operation, pls try again\n");
+            printf(operation_list);
         }
 
     }
@@ -87,9 +87,8 @@ void insert(char *name, node *prev) {
 
     if (ptr != NULL) {
         printf("\nEnter a value to insert in the %s: ", name);
-        scanf("%d", &ptr->data);
+        ptr->data = get_num();
         add(prev, ptr);
-
 
         printf("Successfully inserted %d in the %s", ptr->data, name);
         display();
@@ -102,7 +101,6 @@ void reverse() {
     head->next = prev;
 
     while(prev != head) {
-        printf("Current prev val %d", prev->data);
         node *nextPrev = prev->prev;
 
         prev->prev = prev->next;
@@ -115,18 +113,44 @@ void reverse() {
 }
 
 
+void sever(node *ptr) {
+    ptr->prev->next = ptr->next;
+    ptr->next->prev = ptr->prev;
+}
+
+
 void sort() {
     node *pivot = head->next;
 
     while (pivot != head) {
         node *next = pivot->next;
 
-
         while (next != head) {
+            printf("Sorting %d %d", pivot->data, next->data);
+            if (pivot->data < next->data) {
+                next = next->next;
 
+
+            }
+            else {
+                node *pivot_prev = pivot->prev;
+
+                sever(pivot);
+                add(next, pivot);
+
+                sever(next);
+                add(pivot_prev, next);
+
+                pivot = next;
+                next = pivot->next;
+                printf("New pivot %d", pivot->data);
+            }
         }
-
+        pivot = pivot->next;
+        printf("Bottom pivot %d %d %d\n", pivot->data, pivot->prev->data, pivot->next->data);
     }
+    printf("Sorting complete\n");
+    display();
 }
 
 
@@ -169,3 +193,13 @@ void add(node *prev, node *ptr) {
     prev->next = ptr;
 }
 
+
+int get_num() {
+    char input[10];
+    int num = 0;
+
+    fflush(stdin);
+    fgets(input, 10, stdin);
+    sscanf(input, "%d", &num);
+    return num;
+}
