@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+// Data container used for this linked list
 typedef struct Node {
     int data;
     struct Node *prev;
     struct Node *next;
 } node;
 
+// Declare used functions here
 void insert();
 void reverse();
 void sort();
@@ -17,6 +18,7 @@ void add(node*, node*);
 void sever(node*);
 int get_num();
 
+// The head serves as the starting point for any operation
 node *create(), *head;
 
 const char *operation_list =
@@ -36,19 +38,27 @@ int main() {
     printf("Submitted to: Vincent Lomibao\n");
 
     printf(operation_list);
+
+    // To reduce complexity of code, we immediately assign a node to head
+    // so we no longer have to check if it is null
     head = create();
     int operation = 0;
 
+    // If operation is not exit which is 7
     while (operation != 7) {
         printf("\nEnter your operation: ");
+
+        // get_num() is a custom input grabber that protects against buffer overflow
         operation = get_num();
 
         switch (operation) {
         case 1:
+            // We tell the insert to add a node after the head
             insert("front", head);
             break;
 
         case 2:
+            // We tell the insert to add a node on the before the head
             insert("back", head->prev);
             break;
 
@@ -68,6 +78,7 @@ int main() {
             display();
             break;
 
+        // Exit
         case 7:
             break;
 
@@ -90,6 +101,8 @@ void insert(char *name, node *prev) {
     if (ptr != NULL) {
         printf("\nEnter a value to insert in the %s: ", name);
         ptr->data = get_num();
+
+        // We tell add to insert the ptr after the prev
         add(prev, ptr);
 
         printf("Successfully inserted %d in the %s", ptr->data, name);
@@ -102,6 +115,7 @@ void reverse() {
     node *prev = head;
 
     while(1) {
+        // We loop backwards while assigning a new next and previous
         node *nextPrev = prev->prev;
 
         prev->prev = prev->next;
@@ -118,6 +132,7 @@ void reverse() {
 }
 
 
+// Removes a node from the linked list
 void sever(node *ptr) {
     ptr->prev->next = ptr->next;
     ptr->next->prev = ptr->prev;
@@ -131,9 +146,10 @@ void sort() {
         node *next = pivot->next;
 
         while (next != head) {
+
+            // If less than the next, we proceed
             if (pivot->data < next->data) {
                 next = next->next;
-
 
             }
             else {
@@ -149,6 +165,7 @@ void sort() {
                 next = pivot->next;
             }
         }
+        // We go back to the next of pivot
         pivot = pivot->next;
     }
     printf("Sorting complete\n");
@@ -164,6 +181,7 @@ void clear_duplicates() {
         node *next = target->next;
 
         while (next != head) {
+            // We use this later, as the current next might get deleted
             node *future_next = next->next;
 
             if (target->data == next->data) {
@@ -180,7 +198,7 @@ void clear_duplicates() {
     display();
 }
 
-
+// This just loops through the linked list and then prints their values
 void display() {
     node *next = head->next;
 
@@ -192,7 +210,7 @@ void display() {
     printf("]\n");
 }
 
-
+// This makes creating a new node less error prone
 node *create(){
     node* ptr = (node*)malloc(sizeof(node));
 
@@ -207,7 +225,7 @@ node *create(){
     return ptr;
 }
 
-
+// Shortcut for adding a node in the linked list
 void add(node *prev, node *ptr) {
     ptr->prev = prev;
     ptr->next = prev->next;
@@ -215,11 +233,12 @@ void add(node *prev, node *ptr) {
     prev->next = ptr;
 }
 
-
+// Safe way to get inputs
 int get_num() {
     char input[10];
     int num = 0;
 
+    // If the use gave bad input, this will clear it out
     fflush(stdin);
     fgets(input, 10, stdin);
     sscanf(input, "%d", &num);
