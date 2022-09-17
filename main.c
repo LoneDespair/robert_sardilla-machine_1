@@ -76,17 +76,20 @@ node *create_node(){
 void insert_front() {
     node* ptr = create_node();
 
-    if (ptr != NULL) {
-        printf("\nEnter value: ");
-        scanf("%d", &ptr->data);
-
-        ptr->next = head;
-        head = ptr;
-
-        if (tail == NULL) {
-            tail = ptr;
-        }
+    if (ptr == NULL) {
+        return;
     }
+
+    printf("\nEnter value: ");
+    scanf("%d", &ptr->data);
+
+    ptr->next = head;
+    head = ptr;
+
+    if (tail == NULL) {
+        tail = ptr;
+    }
+
 }
 
 
