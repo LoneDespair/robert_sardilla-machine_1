@@ -4,15 +4,14 @@
 
 typedef struct Node {
     int data;
-
-    struct Node *prev;
     struct Node *next;
 } node;
 
 void insert_front();
 void insert_back();
+void display();
 
-node* head;
+node* head, tail;
 node* create_node(){
     node* ptr = (node*)malloc(sizeof(node));
 
@@ -28,11 +27,10 @@ int main() {
     printf("Submitted by: Robert Sardilla\n");
     printf("Submitted to: Vincent Lomibao\n");
 
-    head = create_node();
     int operation = 0;
 
     while (operation != 7) {
-        printf("Available Operations\n"
+        printf("\nAvailable Operations\n"
                "1.Add node to the front\n"
                "2.Add node to the back\n"
                "3.Reverse\n"
@@ -49,6 +47,10 @@ int main() {
             insert_front();
             break;
 
+        case 6:
+            display();
+            break;
+
         default:
             printf("Invalid operation, pls try again\n");
         }
@@ -62,16 +64,28 @@ int main() {
 void insert_front() {
     node* ptr = create_node();
 
-    if (ptr == NULL){
-        return;
+    if (ptr != NULL){
+        printf("Enter value:");
+        scanf("%d", &ptr->data);
+
+        ptr->next = head;
+        head = ptr;
     }
-
-    printf("Enter value:");
-    scanf("%d", &ptr->data);
-
-    printf("Result  %d:", ptr->data);
-
 }
 
 
+void display() {
+    node* next = head;
+
+    if(next == NULL){
+        printf("Nothing to display\n");
+        return;
+    }
+
+    printf("Values\n");
+    while (next != NULL) {
+        printf("%d ", next->data);
+        next = next->next;
+    }
+}
 
