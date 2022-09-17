@@ -27,7 +27,7 @@ int main() {
     int operation = 0;
 
     while (operation != 7) {
-        printf("\nAvailable Operations\n"
+        printf("\nAvailable Operations:\n"
                "1.Insert front\n"
                "2.Insert back\n"
                "3.Reverse\n"
@@ -36,7 +36,7 @@ int main() {
                "6.Display\n"
                "7.Exit\n");
 
-        printf("\nEnter your operation\n");
+        printf("\nEnter your operation: ");
         scanf("%d", &operation);
 
         switch (operation) {
@@ -97,13 +97,16 @@ void insert_front() {
     node* ptr = create_node();
 
     if (ptr != NULL) {
-        printf("\nEnter value: ");
+        printf("\nEnter a value to insert in the front: ");
         scanf("%d", &ptr->data);
 
         ptr->prev = head;
         ptr->next = head->next;
         head->next->prev = ptr;
         head->next = ptr;
+
+        printf("Successfully inserted %d in the front\n", ptr->data);
+        display();
     }
 }
 
@@ -112,23 +115,40 @@ void insert_back() {
     node* ptr = create_node();
 
     if (ptr != NULL) {
-        printf("\nEnter a value: ");
+        printf("\nEnter a value to insert in the back: ");
         scanf("%d", &ptr->data);
 
         ptr->prev = head->prev;
         ptr->next = head;
         head->prev->next = ptr;
         head->prev = ptr;
+
+        printf("Successfully inserted %d in the back\n", ptr->data);
+        display();
     }
 }
 
 
 void reverse() {
+    node *prev = head->prev;
+    head->next = prev;
 
+    while(prev != head) {
+        printf("Current prev val %d", prev->data);
+        node *nextPrev = prev->prev;
+
+        prev->prev = prev->next;
+        prev->next = nextPrev;
+        prev = nextPrev;
+    }
+
+    printf("Successfully reversed\n");
+    display();
 }
 
 
 void sort() {
+
 
 }
 
@@ -139,17 +159,13 @@ void clear_duplicates() {
 
 
 void display() {
-    node* next = head->next;
+    node *next = head->next;
 
-    if(next == head){
-        printf("\nNothing to display\n");
-        return;
-    }
-
-    printf("\nValues\n");
+    printf("\nValues: [ ");
     while (next != head) {
         printf("%d ", next->data);
         next = next->next;
     }
+    printf("]\n");
 }
 
