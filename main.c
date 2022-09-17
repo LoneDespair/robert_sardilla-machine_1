@@ -14,6 +14,7 @@ void sort();
 void clear_duplicates();
 void display();
 void add(node*, node*);
+void sever(node*);
 int get_num();
 
 node *create(), *head;
@@ -68,7 +69,6 @@ int main() {
             break;
 
         case 7:
-            printf("Exiting\n");
             break;
 
         default:
@@ -77,6 +77,8 @@ int main() {
         }
 
     }
+
+    printf("\nProgram exiting, thank you for using\n");
 
     return 0;
 }
@@ -97,15 +99,18 @@ void insert(char *name, node *prev) {
 
 
 void reverse() {
-    node *prev = head->prev;
-    head->next = prev;
+    node *prev = head;
 
-    while(prev != head) {
+    while(1) {
         node *nextPrev = prev->prev;
 
         prev->prev = prev->next;
         prev->next = nextPrev;
         prev = nextPrev;
+
+        if (prev == head) {
+            break;
+        }
     }
 
     printf("Successfully reversed\n");
@@ -126,7 +131,6 @@ void sort() {
         node *next = pivot->next;
 
         while (next != head) {
-            printf("Sorting %d %d", pivot->data, next->data);
             if (pivot->data < next->data) {
                 next = next->next;
 
@@ -143,11 +147,9 @@ void sort() {
 
                 pivot = next;
                 next = pivot->next;
-                printf("New pivot %d", pivot->data);
             }
         }
         pivot = pivot->next;
-        printf("Bottom pivot %d %d %d\n", pivot->data, pivot->prev->data, pivot->next->data);
     }
     printf("Sorting complete\n");
     display();
@@ -155,7 +157,27 @@ void sort() {
 
 
 void clear_duplicates() {
+    node *target = head->next;
+    int count_duplicates = 0;
 
+    while (target != head) {
+        node *next = target->next;
+
+        while (next != head) {
+            node *future_next = next->next;
+
+            if (target->data == next->data) {
+                sever(next);
+                free(next);
+                count_duplicates += 1;
+            }
+            next = future_next;
+        }
+        target = target->next;
+    }
+
+    printf("Successfully cleared %d duplicates\n", count_duplicates);
+    display();
 }
 
 
