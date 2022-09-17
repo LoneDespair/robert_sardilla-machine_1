@@ -4,6 +4,7 @@
 
 typedef struct Node {
     int data;
+    struct Node *prev;
     struct Node *next;
 } node;
 
@@ -11,9 +12,10 @@ void insert_front();
 void insert_back();
 void reverse();
 void sort();
+void clear_duplicates();
 void display();
 
-node *create_node(), *head, *tail;
+node *create_node(), *head;
 
 
 int main() {
@@ -21,6 +23,7 @@ int main() {
     printf("Submitted by: Robert Sardilla\n");
     printf("Submitted to: Vincent Lomibao\n");
 
+    head = create_node();
     int operation = 0;
 
     while (operation != 7) {
@@ -45,8 +48,24 @@ int main() {
             insert_back();
             break;
 
+        case 3:
+            reverse();
+            break;
+
+        case 4:
+            sort();
+            break;
+
+        case 5:
+            clear_duplicates();
+            break;
+
         case 6:
             display();
+            break;
+
+        case 7:
+            printf("Exiting\n");
             break;
 
         default:
@@ -66,7 +85,8 @@ node *create_node(){
         printf("Error: Memory Overflow\n");
     }
     else {
-        ptr->next = NULL;
+        ptr->prev = ptr;
+        ptr->next = ptr;
     }
 
     return ptr;
@@ -76,20 +96,15 @@ node *create_node(){
 void insert_front() {
     node* ptr = create_node();
 
-    if (ptr == NULL) {
-        return;
+    if (ptr != NULL) {
+        printf("\nEnter value: ");
+        scanf("%d", &ptr->data);
+
+        ptr->prev = head;
+        ptr->next = head->next;
+        head->next->prev = ptr;
+        head->next = ptr;
     }
-
-    printf("\nEnter value: ");
-    scanf("%d", &ptr->data);
-
-    ptr->next = head;
-    head = ptr;
-
-    if (tail == NULL) {
-        tail = ptr;
-    }
-
 }
 
 
@@ -100,33 +115,41 @@ void insert_back() {
         printf("\nEnter a value: ");
         scanf("%d", &ptr->data);
 
-        if (tail == NULL) {
-            head = ptr;
-        }
-        else {
-            tail->next = ptr;
-        }
-        tail = ptr;
+        ptr->prev = head->prev;
+        ptr->next = head;
+        head->prev->next = ptr;
+        head->prev = ptr;
     }
 }
 
 
-void display() {
-    node* next = head;
+void reverse() {
 
-    if(next == NULL){
+}
+
+
+void sort() {
+
+}
+
+
+void clear_duplicates() {
+
+}
+
+
+void display() {
+    node* next = head->next;
+
+    if(next == head){
         printf("\nNothing to display\n");
         return;
     }
 
     printf("\nValues\n");
-    while (next != NULL) {
+    while (next != head) {
         printf("%d ", next->data);
         next = next->next;
-
-        if (next != NULL){
-        }
-
     }
 }
 
