@@ -8,14 +8,23 @@ typedef struct Node {
     struct Node *next;
 } node;
 
-void insert_front();
-void insert_back();
+void insert();
 void reverse();
 void sort();
 void clear_duplicates();
 void display();
+void add(node*, node*);
 
-node *create_node(), *head;
+node *create(), *head;
+
+const char *operation_list = "\nAvailable Operations:\n"
+               "1.Insert front\n"
+               "2.Insert back\n"
+               "3.Reverse\n"
+               "4.Sort\n"
+               "5.Clear duplicates\n"
+               "6.Display\n"
+               "7.Exit\n";
 
 
 int main() {
@@ -23,29 +32,23 @@ int main() {
     printf("Submitted by: Robert Sardilla\n");
     printf("Submitted to: Vincent Lomibao\n");
 
-    head = create_node();
+    head = create();
     int operation = 0;
+    printf(operation_list);
 
     while (operation != 7) {
-        printf("\nAvailable Operations:\n"
-               "1.Insert front\n"
-               "2.Insert back\n"
-               "3.Reverse\n"
-               "4.Sort\n"
-               "5.Clear duplicates\n"
-               "6.Display\n"
-               "7.Exit\n");
 
         printf("\nEnter your operation: ");
+
         scanf("%d", &operation);
 
         switch (operation) {
         case 1:
-            insert_front();
+            insert("front", head);
             break;
 
         case 2:
-            insert_back();
+            insert("back", head->prev);
             break;
 
         case 3:
@@ -69,6 +72,7 @@ int main() {
             break;
 
         default:
+            printf(operation_list);
             printf("\nInvalid operation, pls try again\n");
         }
 
@@ -78,52 +82,16 @@ int main() {
 }
 
 
-node *create_node(){
-    node* ptr = (node*)malloc(sizeof(node));
-
-    if (ptr == NULL){
-        printf("Error: Memory Overflow\n");
-    }
-    else {
-        ptr->prev = ptr;
-        ptr->next = ptr;
-    }
-
-    return ptr;
-}
-
-
-void insert_front() {
-    node* ptr = create_node();
+void insert(char *name, node *prev) {
+    node* ptr = create();
 
     if (ptr != NULL) {
-        printf("\nEnter a value to insert in the front: ");
+        printf("\nEnter a value to insert in the %s: ", name);
         scanf("%d", &ptr->data);
-
-        ptr->prev = head;
-        ptr->next = head->next;
-        head->next->prev = ptr;
-        head->next = ptr;
-
-        printf("Successfully inserted %d in the front\n", ptr->data);
-        display();
-    }
-}
+        add(prev, ptr);
 
 
-void insert_back() {
-    node* ptr = create_node();
-
-    if (ptr != NULL) {
-        printf("\nEnter a value to insert in the back: ");
-        scanf("%d", &ptr->data);
-
-        ptr->prev = head->prev;
-        ptr->next = head;
-        head->prev->next = ptr;
-        head->prev = ptr;
-
-        printf("Successfully inserted %d in the back\n", ptr->data);
+        printf("Successfully inserted %d in the %s", ptr->data, name);
         display();
     }
 }
@@ -148,8 +116,17 @@ void reverse() {
 
 
 void sort() {
+    node *pivot = head->next;
+
+    while (pivot != head) {
+        node *next = pivot->next;
 
 
+        while (next != head) {
+
+        }
+
+    }
 }
 
 
@@ -161,11 +138,34 @@ void clear_duplicates() {
 void display() {
     node *next = head->next;
 
-    printf("\nValues: [ ");
+    printf("\nCurrent values: [ ");
     while (next != head) {
         printf("%d ", next->data);
         next = next->next;
     }
     printf("]\n");
+}
+
+
+node *create(){
+    node* ptr = (node*)malloc(sizeof(node));
+
+    if (ptr == NULL){
+        printf("Error: Memory Overflow\n");
+    }
+    else {
+        ptr->prev = ptr;
+        ptr->next = ptr;
+    }
+
+    return ptr;
+}
+
+
+void add(node *prev, node *ptr) {
+    ptr->prev = prev;
+    ptr->next = prev->next;
+    prev->next->prev = ptr;
+    prev->next = ptr;
 }
 
